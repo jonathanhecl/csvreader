@@ -87,9 +87,3 @@ func CSVReader(filename string) (CSVStruct, error) {
 
 	return data, nil
 }
-
-func ReadFromStdin(reader *bufio.Reader) string {
-	result, _ := reader.ReadString('\n')
-	witl := result[:len(result)-1]
-	return witl
-}
