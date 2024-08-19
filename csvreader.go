@@ -27,7 +27,7 @@ func (data *CSVStruct) addRow(id int, row string) {
 	}
 }
 
-func CSVReader(filename string) (CSVStruct, error) {
+func LoadFileCSV(filename string) (CSVStruct, error) {
 	csvFile, err := os.Open(filename)
 	if err != nil {
 		return CSVStruct{}, err
@@ -81,9 +81,51 @@ func CSVReader(filename string) (CSVStruct, error) {
 		id++
 	}
 
-	fmt.Println("Delimiter:", data.delimiter)
-	fmt.Println("Headers:", data.Headers)
-	fmt.Println("Rows:", data.Rows)
+	return data, nil
+}
+
+func ReadCSV(content string) (CSVStruct, error) {
+	var data CSVStruct = CSVStruct{
+		delimiter: "",
+		Headers:   make([]string, 0),
+		Rows:      make(map[int]map[string]string, 0),
+	}
+	var bufferLines []string
+	var id int = 0
+
+	for _, line := range strings.Split(content, "\n") {
+		if line == "" {
+			continue
+		}
+
+		if len(bufferLines) < 3 {
+			bufferLines = append(bufferLines, line)
+		}
+
+		if len(bufferLines) == 3 && data.delimiter == "" {
+			for _, d := range delimiters {
+				s0 := strings.Split(bufferLines[0], d)
+				s1 := strings.Split(bufferLines[1], d)
+				s2 := strings.Split(bufferLines[2], d)
+				if len(s0) > 1 && len(s0) == len(s1) && len(s0) == len(s2) {
+					data.delimiter = d
+					data.Headers = s0
+					break
+				}
+			}
+
+			if data.delimiter == "" {
+				return CSVStruct{}, fmt.Errorf("delimiter not found")
+			}
+
+			data.addRow(0, bufferLines[1])
+			data.addRow(1, bufferLines[2])
+			continue
+		} else if data.delimiter != "" {
+			data.addRow(id, line)
+		}
+		id++
+	}
 
 	return data, nil
 }
