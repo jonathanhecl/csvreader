@@ -20,7 +20,7 @@ func (data *CSVStruct) addRow(id int, row string) {
 	data.Rows[id] = make(map[string]string)
 	for i := 0; i < len(data.Headers); i++ {
 		if i < len(items) {
-			data.Rows[id][data.Headers[i]] = items[i]
+			data.Rows[id][data.Headers[i]] = strings.TrimSpace(items[i])
 		} else {
 			data.Rows[id][data.Headers[i]] = ""
 		}
@@ -63,7 +63,10 @@ func LoadFileCSV(filename string) (CSVStruct, error) {
 				s2 := strings.Split(bufferLines[2], d)
 				if len(s0) > 1 && len(s0) == len(s1) && len(s0) == len(s2) {
 					data.delimiter = d
-					data.Headers = s0
+					data.Headers = make([]string, 0)
+					for i := 0; i < len(s0); i++ {
+						data.Headers = append(data.Headers, strings.TrimSpace(s0[i]))
+					}
 					break
 				}
 			}
