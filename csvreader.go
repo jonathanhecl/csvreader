@@ -112,7 +112,10 @@ func ReadCSV(content string) (CSVStruct, error) {
 				s2 := strings.Split(bufferLines[2], d)
 				if len(s0) > 1 && len(s0) == len(s1) && len(s0) == len(s2) {
 					data.delimiter = d
-					data.Headers = s0
+					data.Headers = make([]string, 0)
+					for i := 0; i < len(s0); i++ {
+						data.Headers = append(data.Headers, strings.TrimSpace(s0[i]))
+					}
 					break
 				}
 			}
