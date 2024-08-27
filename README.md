@@ -24,9 +24,9 @@ import (
 )
 
 func main() {
-    data := csvreader.LoadFileCSV("example.csv")
+    data, err := csvreader.LoadFileCSV("example.csv")
     // ...
-    data2 := csvreader.ReadCSV("ID,Name,Extra\n1,Test,2\n2,Another,more\n3,Newest,\n4,Another 2,more data")
+    data2, err := csvreader.ReadCSV("ID,Name,Extra\n1,Test,2\n2,Another,more\n3,Newest,\n4,Another 2,more data")
     // ...
 }
 
