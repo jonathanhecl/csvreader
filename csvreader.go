@@ -7,6 +7,11 @@ import (
 	"strings"
 )
 
+type DataStruct interface {
+	GetHeaders() []string
+	GetRows() map[int]map[string]string
+}
+
 type CSVStruct struct {
 	delimiter string
 	Headers   []string                  // Headers[0] = "label"
@@ -14,6 +19,14 @@ type CSVStruct struct {
 }
 
 var delimiters = []string{",", ";", "\t", ""}
+
+func (c CSVStruct) GetHeaders() []string {
+	return c.Headers
+}
+
+func (c CSVStruct) GetRows() map[int]map[string]string {
+	return c.Rows
+}
 
 func (data *CSVStruct) addRow(id int, row string) {
 	items := strings.Split(row, data.delimiter)
